@@ -15,6 +15,16 @@ While the original v2 relied on static python scripts for orchestration, **this 
 > **Caution!**
 > This codebase executes Large Language Model (LLM)-written code. Ensure that you run this within a controlled sandbox environment (e.g., a Docker container).
 
+## 🌟 Innovations & Improvements vs. Original v2
+
+This **Claude Code Agent Edition** introduces fundamental architectural and workflow enhancements over the original [SakanaAI AI-Scientist-v2](https://github.com/SakanaAI/AI-Scientist-ICLR2025-Workshop-Experiment):
+
+1. **Native Interactive Agent Protocol:** Instead of relying entirely on monolithic, static Python scripts for orchestration, this repository integrates deeply with the `@anthropic-ai/claude-code` CLI. It introduces a modular `.claude/` system (skills, agents, rules, hooks) that allows for dynamic pausing, prompt refinement, and human-in-the-loop decisions (e.g., ideation selection).
+2. **Enhanced Error Recovery & Fallbacks:** The pipeline is no longer strictly linear. We implemented an `auto-review-loop` that parses compiler errors (`/paper-compile`), intelligently diagnoses crashes during tree-search, and triggers retry mechanisms when unexpected crashes or resource allocation faults (such as CUDA OOM) occur.
+3. **Advanced Model Support & Telemetry:** We patched the original `llm.py` and `token_tracker.py` to add robust native support for AWS Bedrock Claude models (`anthropic.claude-3-5...`) and Gemini lines, calculating token costs and usage seamlessly alongside OpenAI models.
+4. **Safety Verification Hooks:** We introduced strict `.claude/hooks/experiment-safety-check.sh` pre-flight requirements. If fundamental requirements (like missing `OPENAI_API_KEY` or `ANTHROPIC_API_KEY`) are unfulfilled, the execution fails cleanly before burning API credits.
+5. **Architectural Code Fixes:** This edition fixes multiple critical logical bugs present in the original v2's `agent_manager.py` (e.g., dead code blocks bypassing iteration limits) and stabilizes the `get_batch_responses_from_llm` synchronization.
+
 ## Table of Contents
 
 1.  [Requirements](#requirements)
